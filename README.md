@@ -1,8 +1,8 @@
-#Daisy Chain of Workers
+# Daisy Chain of Workers
 
 **Files:** *workersDaisyChain.go, workersDaisyChain_test.go*
 
-A set of goroutines (workers) is created in a daisy chain, so that every worker W~i~ has an input channel form worker W~i - 1~ and an output channel to worker W~i + 1~.
+A set of goroutines (workers) is created in a daisy chain, so that every worker W~i~ has an input channel form worker W~i-1~ and an output channel to worker W~i+1~.
 
 The caller that triggers the chain of workers must call `StartDaisyChainOfWorkers()`
 
@@ -25,8 +25,8 @@ type workerFun func(wid uint64, inch chan dataEnvelope, outch chan dataEnvelope)
 where:
 
 - `wid` is the worker id in `[1,numOfWorkers]`
-- `inch` is the input channel from worker W~i - 1~
-- `outch` is the output channel to worker W~i + 1~
+- `inch` is the input channel from worker W~i-1~
+- `outch` is the output channel to worker W~i+1~
 
 In general, the worker function will:
 
@@ -35,7 +35,7 @@ In general, the worker function will:
 - write the processed data to the output channel for the next worker
 
 
-###The Example
+### The Example
 
 **File:** *workersDaisyChain_test.go*
 
