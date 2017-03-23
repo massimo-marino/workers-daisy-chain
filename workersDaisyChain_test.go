@@ -35,11 +35,6 @@ func grainWorker(wid uint64, inch chan dataEnvelope, outch chan dataEnvelope) {
 
 	for inData := range inch {
 		inDataTyped = inData.(grainsData)
-		// only the first worker must do this
-		if inDataTyped.local == 0 {
-			inDataTyped.local = 1
-			inDataTyped.total = 1
-		}
 
 		// prepare the data for the next worker
 		outData := grainsData{inDataTyped.local << 1, inDataTyped.total + (inDataTyped.local << 1), inDataTyped.msg + " " + strconv.FormatUint(wid, 10)}
@@ -54,7 +49,8 @@ func grainWorker(wid uint64, inch chan dataEnvelope, outch chan dataEnvelope) {
 func TestGrains(t *testing.T) {
 	// We cannot use 64 with uint64 because of overflow
 	numOfWorkers := uint64(63)
-	d := grainsData{0, 0, "main"}
+	// put 1 grain on the first square
+	d := grainsData{1, 1, "main"}
 	r := StartDaisyChainOfWorkers(numOfWorkers, grainWorker, d)
 	expected := uint64(1 << numOfWorkers)
 
