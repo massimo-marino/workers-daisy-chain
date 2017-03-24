@@ -62,3 +62,61 @@ func TestGrains(t *testing.T) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// Fibonacci Numbers
+//
+// Given n >= 1 compute the fibonacci numbers fib(1), fib(2), ..., fib(n)
+// and print all of them.
+// Fibonacci numbers are recursively defined as follows:
+//
+// fib(0) = 0
+// fib(1) = 1
+// fib(n) = fib(n-1) + fib(n-2), n >= 2
+//
+// There are n workers named fibw-1. ..., fibw-n
+// Every fibw-i, i in [1,n] receives in input a pair [fib(i-1),fib(i)], writes
+// fib(i), and sends to the next worker fibw-i+1 the pair [fib(i), fib(i-1) + fib(i)]
+// The worker fibw-1 receives the pair [fib(0), fib(1)]
+// The worker fibw-2 receives the pair [fib(1), fib(2)]
+// And so on.
+// The last worker fibw-n will send the pair [fib(n-1), fib(n)]
+
+// data structure exchanged between workers
+type fibData struct {
+	fibp uint64
+	fibc uint64
+}
+
+// the worker function run as a goroutine
+func fibWorker(wid uint64, inch chan dataEnvelope, outch chan dataEnvelope) {
+	defer close(outch)
+	var inDataTyped fibData
+
+	for inData := range inch {
+		inDataTyped = inData.(fibData)
+
+		// prepare the data for the next worker
+		outData := fibData{inDataTyped.fibc, inDataTyped.fibp + inDataTyped.fibc}
+
+		fmt.Printf("fibw-%d - fib(%v) = %v\n", wid, wid, inDataTyped.fibc)
+
+		// send the data to the next worker
+		outch <- outData
+	}
+}
+
+func TestFib(t *testing.T) {
+	// We can compute up to fib(93) when using uint64's
+	numOfWorkers := uint64(93)
+	// prepare [fib(0), fib(1)]
+	d := fibData{0, 1}
+	r := StartDaisyChainOfWorkers(numOfWorkers-1, fibWorker, d)
+	fib_93Expected := uint64(12200160415121876738)
+
+	fmt.Printf("fibw-%d - fib(%d) = %v\n", numOfWorkers, numOfWorkers, r.(fibData).fibc)
+
+	t.Log("Result:", r.(fibData).fibc, "Expected:", fib_93Expected)
+
+	if r.(fibData).fibc != fib_93Expected {
+		t.Fatal("Final value is not the expected one")
+	}
+}

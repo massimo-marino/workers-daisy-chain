@@ -16,7 +16,7 @@ type workerConfig struct {
 
 // Start the daisy chain of workers passing the number of workers, a workerFun,
 // and the data to be sent to the first worker in the chain.
-// Return the final data received from the last worker in the chain
+// Return the final data processed by and received from the last worker in the chain
 func StartDaisyChainOfWorkers(numOfWorkers uint64, worker workerFun, d dataEnvelope) dataEnvelope {
 	// set up the worker config structure
 	var wConfig workerConfig

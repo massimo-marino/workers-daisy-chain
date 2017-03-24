@@ -60,7 +60,7 @@ fib(1) = 1
 fib(n) = fib(n-1) + fib(n-2), n >= 2  
 ````
 
-There are n workers named `fibw-1. ..., fibw-n`  
+There are `n` workers named `fibw-1. ..., fibw-n`  
 Every `fibw-i`, `i` in `[1,n]` receives in input a pair `[fib(i-1),fib(i)]`, writes
 `fib(i)`, and sends to the next worker `fibw-i+1` the pair `[fib(i), fib(i-1) + fib(i)]`  
 The worker `fibw-1` receives the pair `[fib(0), fib(1)]`  
