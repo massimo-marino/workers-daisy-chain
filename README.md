@@ -53,11 +53,12 @@ Write code that shows:
 #### Fibonacci Numbers
 Given `n >= 1` compute the fibonacci numbers `fib(1), fib(2), ..., fib(n)` and print all of them.  
 Fibonacci numbers are recursively defined as follows:
-``
+
+````
 fib(0) = 0  
 fib(1) = 1  
 fib(n) = fib(n-1) + fib(n-2), n >= 2  
-``
+````
 
 There are n workers named `fibw-1. ..., fibw-n`  
 Every `fibw-i`, `i` in `[1,n]` receives in input a pair `[fib(i-1),fib(i)]`, writes
