@@ -35,10 +35,11 @@ In general, the worker function will:
 - write the processed data to the output channel for the next worker
 
 
-### The Example
+### The Examples
 
 **File:** *workersDaisyChain_test.go*
 
+#### Grains
 Calculate the number of grains of wheat on a chessboard given that the number on each square doubles.
 There once was a wise servant who saved the life of a prince.
 The king promised to pay whatever the servant could dream up.
@@ -48,3 +49,20 @@ Write code that shows:
 
 - how many grains were on each square, and
 - the total number of grains
+
+#### Fibonacci Numbers
+Given `n >= 1` compute the fibonacci numbers `fib(1), fib(2), ..., fib(n)` and print all of them.  
+Fibonacci numbers are recursively defined as follows:
+``
+fib(0) = 0  
+fib(1) = 1  
+fib(n) = fib(n-1) + fib(n-2), n >= 2  
+``
+
+There are n workers named `fibw-1. ..., fibw-n`  
+Every `fibw-i`, `i` in `[1,n]` receives in input a pair `[fib(i-1),fib(i)]`, writes
+`fib(i)`, and sends to the next worker `fibw-i+1` the pair `[fib(i), fib(i-1) + fib(i)]`  
+The worker `fibw-1` receives the pair `[fib(0), fib(1)]`  
+The worker `fibw-2` receives the pair `[fib(1), fib(2)]`  
+And so on.  
+The last worker `fibw-n` will send the pair `[fib(n-1), fib(n)]`  
